@@ -119,12 +119,24 @@ def update_copos(lista_de_copos):
  
 ## Enemigos ####
        
-def update_bicho(bicho,velocidad):
-    
-        lados = bicho.lados
+def borrar_enemigos(lista_de_enemigos):
+        for enemigo in lista_de_enemigos:
+            if enemigo.muerto == "si":
+                for lado in enemigo.lados:
+                    enemigo.lados[lado].y = 3000
         
-        bicho.lados += velocidad
-        
+cascarudo_caminando_izquierda= [
+    pygame.image.load("imagenes/enemigos/cascarudo/cascarudo1.png"),
+    pygame.image.load("imagenes/enemigos/cascarudo/cascarudo2.png"),
+    pygame.image.load("imagenes/enemigos/cascarudo/cascarudo3.png"),
+    pygame.image.load("imagenes/enemigos/cascarudo/cascarudo4.png"),
+    pygame.image.load("imagenes/enemigos/cascarudo/cascarudo5.png")
+]    
+
+cascarudo_caminando_derecha = girar_imagenes(cascarudo_caminando_izquierda,True,False)
         
             
-       
+diccionario_animaciones_cascarudos = {}
+diccionario_animaciones_cascarudos["derecha"] = cascarudo_caminando_derecha
+diccionario_animaciones_cascarudos["izquierda"] = cascarudo_caminando_izquierda
+     

@@ -1,47 +1,56 @@
 import pygame
-import datetime
+import sys
 
+# Inicializar Pygame
 pygame.init()
-screen = pygame.display.set_mode((400, 300))
 
-font = pygame.font.SysFont(None, 48)
-clock = pygame.time.Clock()
-fps = 50
+# Crear una pantalla
+screen = pygame.display.set_mode((800, 600))
 
-# Duración total del cronómetro en minutos
-total_minutes = 3
+# Definir colores
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 
-# Convertir la duración total a segundos
-total_seconds = total_minutes * 60
+# Variable para indicar si el juego está en pausa
+game_paused = False
 
-running = True
-while running:
-    
+# Posición inicial del objeto en movimiento
+object_position = [400, 300]
+object_velocity = [2, 2]
+ 
+vida = 3
+
+
+
+# Bucle principal del juego
+while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                # Pausar o reanudar el juego
+                game_paused = not game_paused
+    if not game_paused:
+        # Actualizar la posición del objeto
+        object_position[0] += object_velocity[0]
+        object_position[1] += object_velocity[1]
 
-    # Actualizar el tiempo restante en función de los ticks
-    milliseconds = clock.tick(fps)  # Obtener la cantidad de milisegundos transcurridos desde la última actualización
-    seconds_elapsed = milliseconds / 1000  # Convertir los milisegundos a segundos
-    total_seconds -= seconds_elapsed
+        # Lógica adicional y colisiones
 
-    # Verificar si se ha alcanzado el tiempo límite
-    if total_seconds <= 0:
-        total_seconds = 0
-        running = False
+    screen.fill(BLACK)
+    pygame.draw.circle(screen, WHITE, object_position, 20)
+    separacion = 20
+    for cuadrado in range(vida):
+        pygame.draw.rect(screen,WHITE,(separacion,100,50,50))
+        pygame.draw.rect(screen,"black",(separacion,100,50,50),5)
+        separacion += 50
 
-    # Calcular los minutos y segundos actuales
-    minutes = total_seconds // 60
-    seconds = total_seconds % 60
+    if game_paused:
+        # Mostrar mensaje de pausa
+        pause_font = pygame.font.Font(None, 36)
+        pause_text = pause_font.render("Juego en pausa", True, WHITE)
+        screen.blit(pause_text, (300, 250))
 
-    # Renderizar el texto del cronómetro
-    time_text = "{:02d}:{:02d}".format(int(minutes), int(seconds))
-    text_surface = font.render(time_text, True, (255, 255, 255))
-    text_rect = text_surface.get_rect(center=(200, 150))
-
-    screen.fill((0, 0, 0))
-    screen.blit(text_surface, text_rect)
     pygame.display.flip()
-
-pygame.quit()

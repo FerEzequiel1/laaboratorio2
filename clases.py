@@ -8,6 +8,8 @@ class personaje:
         self.alto = tamaño[1]
         #Animaciones
         self.contador_pasos = 0
+        self.contador_pasos_drop = 0
+        self.propulsion = False
         self.que_hace = "quieto_derecha"
         self.animaciones = animaciones
         self.derecha = True
@@ -27,6 +29,8 @@ class personaje:
         self.lados = obtener_rectangulos(self.rectangulo)
         #Puntos
         self.puntos = 0
+        #Vidas
+        self.vidas = 3
        
      
     def rescalar_animaciones(self):
@@ -48,7 +52,7 @@ class personaje:
             
       
             
-    def update(self,pantalla,lista_de_plataformas,lista_de_nieve,lista_de_acaros):
+    def update(self,pantalla,lista_de_plataformas,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,lista_de_mejoras):
         match self.que_hace:
             case "derecha":
                 if not self.esta_saltado:
@@ -71,8 +75,10 @@ class personaje:
                     self.esta_saltado = True
                     self.desplazamiento_y = self.potencia_salto
         self.aplicar_gravedad(pantalla,lista_de_plataformas)
-        self.detectar_nieve(lista_de_nieve,lista_de_acaros)
-        self.detectar_colision(lista_de_plataformas)
+        self.detectar_nieve(lista_de_enemigos,lista_de_copos,lista_enemgios_caida)
+        self.detectar_colision(lista_de_plataformas,lista_de_mejoras)
+        self.vida_personaje(pantalla)
+        
                 
     def aplicar_gravedad(self,pantalla,lista_de_plataformas):
         if self.esta_saltado:
@@ -93,40 +99,95 @@ class personaje:
                 self.esta_saltado = False
                 self.desplazamiento_y = 0
                 break 
+            elif(self.lados["top"].colliderect(plataforma.lados["bottom"])):    
+                self.esta_saltado = True
+                self.desplazamiento_y = 1
+                break
             else:
                 self.esta_saltado = True
             
          
-    def detectar_nieve(self,lista_de_nieve,lista_de_acaros):
-        for copo in lista_de_nieve:
+    def detectar_nieve(self,lista_de_enemigos,lista_de_copos,lista_enemgios_caida):
+        
+        
+        for copo in lista_de_copos:
             if self.lados["top"].colliderect(copo["rectangulo"]):
-                
-                copo["rectangulo"].x = random.randrange(0,1800,60)
-                copo["rectangulo"].y = random.randrange(-2000,0,60)
+            
+                break
                 
             if copo["rectangulo"].y > 1200:
                 copo["rectangulo"].x = random.randrange(0,1800,60)
                 copo["rectangulo"].y = random.randrange(-2000,0,60) 
         
-        for acaro in lista_de_acaros:
+        for acaro in lista_de_enemigos :
             if self.lados["bottom"].colliderect(acaro.lados["top"]):
-                self.puntos += 1
+                self.puntos += 3
+                acaro.pendulum = "asd"
+                acaro.muerto = "si"
                 for lado in acaro.lados:
                     acaro.lados[lado].y = 3000
+            if self.lados["right"].colliderect(acaro.lados["left"]) or self.lados["left"].colliderect(acaro.lados["right"]):
+                if self.propulsion:
+                    self.propulsion =False 
+                self.vidas -= 1
+                break
+                    
+        for acaro in lista_enemgios_caida :
+            if self.lados["bottom"].colliderect(acaro.lados["top"]):
+                self.puntos += 3
+                acaro.pendulum = "asd"
+                acaro.muerto = "si"
+                for lado in acaro.lados:
+                    acaro.lados[lado].y = 3000
+        
                 
                 
                 
-    def detectar_colision(self,lista_de_plataformas):
+    def detectar_colision(self,lista_de_plataformas,lista_de_mejoras):
         for superficie in lista_de_plataformas:
             if self.rectangulo.colliderect(superficie.lados["right"]):
                 self.mover(self.velocidad)
             elif (self.rectangulo.colliderect(superficie.lados["left"])):
-                  self.mover(self.velocidad*-1)
-                  
-        if self.lados["left"].x  == 0:
+                  self.mover(self.velocidad*-1)    
+                
+            
+        for drop in lista_de_mejoras:
+            tipo = drop.tipo
+            if self.rectangulo.colliderect(drop.rectangulo):
+                match tipo:
+                    case "moneda":
+                        drop.rectangulo.y = 3000
+                        self.puntos += 60
+                    case "propulsion":
+                        self.propulsion = True
+                    case "vida":
+                        if self.vidas<3:
+                            self.vidas +=1
+                            drop.rectangulo.y = 3000
+                            break
+                        else:
+                            if self.vidas >=3 and self.puntos >=50:
+                                print("KOMO E POSIBLE ESTE SUCESO")
+                                self.vidas +=1
+                                drop.rectangulo.y = 3000
+                                break
+        if self.lados["left"].x  <= 0:
             self.mover(self.velocidad)
-        elif self.lados["right"].x > 1850:
+        elif self.lados["right"].x >= 1800:
             self.mover(self.velocidad*-1)
+            
+                        
+    def vida_personaje(self,pantalla):
+        separacion = 250
+        for cuadrado in range(self.vidas):
+            pygame.draw.rect(pantalla,"green",(separacion,0,40,40))
+            pygame.draw.rect(pantalla,"black",(separacion,0,40,40),5)
+            separacion += 50             
+                        
+                        
+                        
+                        
+                    
           
                 
        
