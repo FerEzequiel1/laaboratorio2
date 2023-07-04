@@ -3,7 +3,7 @@ from configuraciones import*
 
 
 class enemigo:
-    def __init__(self,dimenciones,posicion,panth,animacion):
+    def __init__(self,dimenciones,posicion,panth,animacion,especie):
         self.dimencio = dimenciones
         self.imagen = pygame.image.load(panth) 
         self.imagen = pygame.transform.scale(self.imagen,dimenciones)
@@ -27,6 +27,8 @@ class enemigo:
         self.esta_saltado = False
         #Estado
         self.muerto = "no"
+        #Especie
+        self.especie = especie
         
         
     def mover(self,velocidad):
@@ -38,22 +40,23 @@ class enemigo:
          
          for plataforma in lista_de_plataformas:
             
-            if self.rectangulo.colliderect(plataforma.lados["right"]):
+            if self.rectangulo.colliderect(plataforma.lados["right"]) or self.rectangulo.x<=0:
                 self.mover(self.velocidad)
                 self.pendulum = "derecha"
-            elif (self.rectangulo.colliderect(plataforma.lados["left"])):
+            elif (self.rectangulo.colliderect(plataforma.lados["left"]) or self.rectangulo.x >1750):
                 self.mover(self.velocidad*-1)
                 self.pendulum = "izquierda"
+                
             
          if self.pendulum == "derecha":
-               self.animar(pantalla,"derecha")
                self.mover(self.velocidad)
+               self.animar(pantalla,"derecha")
          else:
             if (self.pendulum == "izquierda"):
-                self.animar(pantalla,"izquierda")
                 self.mover(self.velocidad*-1)
-            else:
-                pass 
+                self.animar(pantalla,"izquierda")
+                
+             
            
     def aplicar_gravedad(self,lista_de_plataformas):
         if self.esta_saltado:

@@ -1,5 +1,8 @@
 import pygame,random,sys
 from clase_nieve import nieve
+width = 1800
+height = 1000
+
 
 ##### colores  ####
 BLANCO = (255,255,255)
@@ -8,7 +11,29 @@ ROJO = (200,0,0)
 AZUL = (0,0,255)
 VERDE = (0,255,0)
 
-### Cronometro ### 
+### actualizar_pantalla ### 
+def actualizar_pantalla(pantalla,personaje,fondo,lista_de_plataformas,piso_caida,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,lista_de_mejoras):
+    pantalla.blit(fondo,(0,0))
+   
+    
+    for piso in lista_de_plataformas:
+        pantalla.blit(piso.imagen,piso.rectangulo)
+        
+    for mejora in lista_de_mejoras:
+        pantalla.blit(mejora.imagen,mejora.rectangulo)
+        
+        
+    for enemigo in lista_de_enemigos:
+        pantalla.blit(enemigo.imagen,enemigo.rectangulo)
+        enemigo.pendulo_x(lista_de_plataformas,pantalla)
+        if enemigo.especie == "pajaro":
+            pass
+        else:
+            enemigo.aplicar_gravedad(lista_de_plataformas)
+
+    personaje.update(pantalla,lista_de_plataformas,piso_caida,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,lista_de_mejoras)
+    
+   
 
 # minutos_iniciales = 3
 # segundos_totales = minutos_iniciales * 60 
@@ -46,7 +71,7 @@ def girar_imagenes(lista_imagenes, flip_x,flip_y):
         
     return lista_girada
 
-
+imagen_de_prueba = pygame.image.load("imagenes/enemigos/prueba.png")
 personaje_quieto_derecha = [
     pygame.image.load("imagenes/juan-salvo/quieto/quieto1.png"),
     pygame.image.load("imagenes/juan-salvo/quieto/quieto2.png")
@@ -115,6 +140,10 @@ def update_copos(lista_de_copos):
         
         rectangulo = copo["rectangulo"]
         rectangulo.y += copo["velocidad"]
+
+def print_copos(lista_de_copos,pantalla):
+    for copo in lista_de_copos:
+        pantalla.blit(copo["superficie"],copo["rectangulo"])
         
  
 ## Enemigos ####
@@ -134,9 +163,23 @@ cascarudo_caminando_izquierda= [
 ]    
 
 cascarudo_caminando_derecha = girar_imagenes(cascarudo_caminando_izquierda,True,False)
-        
-            
 diccionario_animaciones_cascarudos = {}
 diccionario_animaciones_cascarudos["derecha"] = cascarudo_caminando_derecha
 diccionario_animaciones_cascarudos["izquierda"] = cascarudo_caminando_izquierda
-     
+
+pajaro_volando_derecha = [
+    pygame.image.load("imagenes/enemigos/pajaro/pajaro-1.png"),
+    pygame.image.load("imagenes/enemigos/pajaro/pajaro-2.png"),
+    pygame.image.load("imagenes/enemigos/pajaro/pajaro-3.png"),
+    pygame.image.load("imagenes/enemigos/pajaro/pajaro-4.png")   
+]
+pajaro_volando_izquierda = girar_imagenes(pajaro_volando_derecha,True,False)
+
+diccionario_animaciones_pajaro = {}
+diccionario_animaciones_pajaro["derecha"] = pajaro_volando_derecha
+diccionario_animaciones_pajaro["izquierda"] = pajaro_volando_izquierda
+
+
+
+############# PLATAFORMAS lv1 #######################
+

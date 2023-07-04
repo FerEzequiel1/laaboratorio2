@@ -31,6 +31,8 @@ class personaje:
         self.puntos = 0
         #Vidas
         self.vidas = 3
+        #Armamento
+        self.balas = 0
        
      
     def rescalar_animaciones(self):
@@ -52,7 +54,7 @@ class personaje:
             
       
             
-    def update(self,pantalla,lista_de_plataformas,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,lista_de_mejoras):
+    def update(self,pantalla,lista_de_plataformas,piso_caida,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,lista_de_mejoras):
         match self.que_hace:
             case "derecha":
                 if not self.esta_saltado:
@@ -74,13 +76,13 @@ class personaje:
                 if not self.esta_saltado:
                     self.esta_saltado = True
                     self.desplazamiento_y = self.potencia_salto
-        self.aplicar_gravedad(pantalla,lista_de_plataformas)
+        self.aplicar_gravedad(pantalla,lista_de_plataformas,piso_caida)
         self.detectar_nieve(lista_de_enemigos,lista_de_copos,lista_enemgios_caida)
         self.detectar_colision(lista_de_plataformas,lista_de_mejoras)
         self.vida_personaje(pantalla)
         
                 
-    def aplicar_gravedad(self,pantalla,lista_de_plataformas):
+    def aplicar_gravedad(self,pantalla,lista_de_plataformas,piso_caida):
         if self.esta_saltado:
             if self.derecha: 
                 self.animar(pantalla,"salta_derecha")
@@ -105,7 +107,11 @@ class personaje:
                 break
             else:
                 self.esta_saltado = True
-            
+         
+        for piso_falso in piso_caida:       
+            if  self.lados["bottom"].colliderect(piso_falso.lados["top"]):
+                self.esta_saltado = True
+                self.desplazamiento_y += self.gravedad
          
     def detectar_nieve(self,lista_de_enemigos,lista_de_copos,lista_enemgios_caida):
         
@@ -124,6 +130,7 @@ class personaje:
                 self.puntos += 3
                 acaro.pendulum = "asd"
                 acaro.muerto = "si"
+                
                 for lado in acaro.lados:
                     acaro.lados[lado].y = 3000
             if self.lados["right"].colliderect(acaro.lados["left"]) or self.lados["left"].colliderect(acaro.lados["right"]):
@@ -160,6 +167,8 @@ class personaje:
                         self.puntos += 60
                     case "propulsion":
                         self.propulsion = True
+                    case "balas":
+                        self.balas += 5
                     case "vida":
                         if self.vidas<3:
                             self.vidas +=1
@@ -167,7 +176,6 @@ class personaje:
                             break
                         else:
                             if self.vidas >=3 and self.puntos >=50:
-                                print("KOMO E POSIBLE ESTE SUCESO")
                                 self.vidas +=1
                                 drop.rectangulo.y = 3000
                                 break
@@ -175,13 +183,18 @@ class personaje:
             self.mover(self.velocidad)
         elif self.lados["right"].x >= 1800:
             self.mover(self.velocidad*-1)
-            
+           
+        if self.propulsion:
+            self.velocidad = 10
+        else:
+            self.velocidad = 5 
                         
     def vida_personaje(self,pantalla):
         separacion = 250
+        imagen_vida = pygame.image.load("imagenes/drops/vida.png")
+        rectangulo = imagen_vida.get_rect()
         for cuadrado in range(self.vidas):
-            pygame.draw.rect(pantalla,"green",(separacion,0,40,40))
-            pygame.draw.rect(pantalla,"black",(separacion,0,40,40),5)
+            pantalla.blit(imagen_vida,(separacion,0))
             separacion += 50             
                         
                         

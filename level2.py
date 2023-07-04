@@ -4,15 +4,12 @@ from modo import*
 from clase_drops import*
 from plataformas import*
 
-bandera_lv2 = False
 
 # Datos de la imagen
 
 Tamaño_pantalla = (width,height)
 PANTALLA = pygame.display.set_mode(Tamaño_pantalla)
 
-fondo_l1 = pygame.image.load("imagenes/fondos/buenos-aires.jpg")
-fondo_l1 = pygame.transform.scale(fondo_l1,Tamaño_pantalla)
 fondo_l2 = pygame.image.load("imagenes/fondos/river-plate.jpg")
 fondo_l2 = pygame.transform.scale(fondo_l2,Tamaño_pantalla)
 
@@ -65,26 +62,16 @@ while True:
             juan.que_hace = "quieto_derecha"
         else:
             juan.que_hace = "quieto_izquierda"
-    
-    
-    
-    if juan.puntos >= 216:
-        for lado in juan.lados:
-            if not bandera_lv2:
-                juan.lados[lado].x = 100
-        bandera_lv2 = True
-            
-        actualizar_pantalla(PANTALLA,juan,fondo_l2,lista_de_plataformas_l2,piso_caida_lv2,lista_de_enemigos_l2,lista_de_nieve,lista_enemgios_caida_l2,lista_de_mejoras_l2)
-    else:
-        actualizar_pantalla(PANTALLA,juan,fondo_l1,lista_de_plataformas_l1,piso_caida_lv1,lista_de_enemigos_l1,lista_de_nieve,lista_enemgios_caida_l1,lista_de_mejoras_l1)
+
+    actualizar_pantalla(PANTALLA,juan,fondo_l2,lista_de_plataformas_l2,piso_caida_lv2,lista_de_enemigos_l2,lista_de_nieve,lista_enemgios_caida_l2,lista_de_mejoras_l2)
 
     print_copos(lista_de_nieve,PANTALLA)
-    texto = fuente.render(f"Puntos:{juan.puntos}",False,"red",None)
+    texto = fuente.render(f"Puntos:{juan.puntos}",False,BLANCO,None)
     vidas = fuente.render(f"Vidas:",False,BLANCO,None)
     
-    PANTALLA.blit(texto,(0,0))
-    PANTALLA.blit(vidas,(150,0))
-
+    PANTALLA.blit(texto,(20,0))
+    PANTALLA.blit(vidas,(200,0))
+    
     if get_modo():
         for lados in piso.lados:
             pygame.draw.rect(PANTALLA,"blue",piso.lados[lados],3)
@@ -93,18 +80,17 @@ while True:
             pygame.draw.rect(PANTALLA,"orange",juan.lados[lado],3)
         pygame.draw.rect(PANTALLA,"blue",juan.lados["main"],3)
             
-        for plataformas in lista_de_plataformas_l1:
+        for plataformas in lista_de_plataformas_l2:
             pygame.draw.rect(PANTALLA,"orange",plataformas.lados["top"],3)
             pygame.draw.rect(PANTALLA,"blue",plataformas.lados["main"],3)
             
         for copo in lista_de_nieve:
             pygame.draw.rect(PANTALLA,"blue",copo["rectangulo"],3)
             
-        for bicho in cascarudo.lados:
-            pygame.draw.rect(PANTALLA,"orange",cascarudo.lados["main"],3)
+        for bicho in lista_de_enemigos_l2:
+            pygame.draw.rect(PANTALLA,"orange",bicho.lados["main"],3)
             
-        for papa in cascarudo2.lados:
-            pygame.draw.rect(PANTALLA,"orange",cascarudo2.lados["main"],3)
+        
             
     milliseconds = RELOJ.tick(FPS)  # Obtener la cantidad de milisegundos transcurridos desde la última actualización
     seconds_elapsed = milliseconds / 1000  # Convertir los milisegundos a segundos
