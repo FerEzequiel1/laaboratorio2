@@ -36,13 +36,14 @@ cascarudo12 = enemigo((50,50),(800,550),"imagenes/enemigos/cascarudo/cascarudo1.
 
 lista_de_enemigos_l1 =[cascarudo,cascarudo2,cascarudo3,cascarudo4,cascarudo5,cascarudo6,cascarudo7,cascarudo8,cascarudo9,cascarudo10,cascarudo11,cascarudo12]
 lista_enemgios_caida_l1 = []
+boss_lv1 = []
 
 
 ####################  MEJORAS LV1  ################
 moneda_l1 = drops((50,50),(1065,200),"imagenes/drops/premio.png","moneda")
 moneda1_l1 = drops((50,50),(700,910),"imagenes/drops/premio.png","moneda")
 moneda2_l1 = drops((50,50),(1500,910),"imagenes/drops/premio.png","moneda")
-vida_l1= drops((50,50),(1200,380),"imagenes/drops/vida.png","vida")
+vida_l1= drops((50,50),(1200,350),"imagenes/drops/vida.png","vida")
 
 lista_de_mejoras_l1 = [moneda_l1,moneda1_l1,moneda2_l1,vida_l1]
 
@@ -74,15 +75,16 @@ piso_caida_lv2 = [piso_l2_2]
 
 ################## ENEMIGOS LV2 #############
 cascarudo1_lv2= enemigo((50,50),(1111,300),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
-pajaro1_lv2 = enemigo((50,50),(550,650),"imagenes/enemigos/prueba.png",diccionario_animaciones_pajaro,"pajaro")
+pajaro1_lv2 = enemigo((50,50),(550,750),"imagenes/enemigos/prueba.png",diccionario_animaciones_pajaro,"pajaro")
 pajaro2_lv2 = enemigo((50,50),(550,350),"imagenes/enemigos/prueba.png",diccionario_animaciones_pajaro,"pajaro")
-pajaro3_lv2 = enemigo((50,50),(1750,650),"imagenes/enemigos/prueba.png",diccionario_animaciones_pajaro,"pajaro")
+pajaro3_lv2 = enemigo((50,50),(1750,750),"imagenes/enemigos/prueba.png",diccionario_animaciones_pajaro,"pajaro")
 pajaro4_lv2 = enemigo((50,50),(900,450),"imagenes/enemigos/prueba.png",diccionario_animaciones_pajaro,"pajaro")
 pajaro5_lv2 = enemigo((50,50),(0,150),"imagenes/enemigos/prueba.png",diccionario_animaciones_pajaro,"pajaro")
 
 
 lista_de_enemigos_l2 = [cascarudo1_lv2,pajaro1_lv2,pajaro2_lv2,pajaro3_lv2,pajaro4_lv2,pajaro5_lv2]
 lista_enemgios_caida_l2 = []
+boss_lv2 = []
 
 
 ####################  MEJORAS LV2  ################
@@ -140,9 +142,10 @@ pajaro3_lv3 = enemigo((50,50),(1750,650),"imagenes/enemigos/prueba.png",dicciona
 pajaro4_lv3 = enemigo((50,50),(850,450),"imagenes/enemigos/prueba.png",diccionario_animaciones_pajaro,"pajaro")
 pajaro5_lv3 = enemigo((50,50),(1100,850),"imagenes/enemigos/prueba.png",diccionario_animaciones_pajaro,"pajaro")
 
-
+boss= enemigo((100,100),(200,0),"imagenes/enemigos/prueba.png",diccionario_animaciones_burgo,"burgo")
 
 lista_de_enemigos_l3 = [cascarudo1_lv3,cascarudo2_lv3,cascarudo3_lv3,pajaro1_lv3,pajaro2_lv3,pajaro3_lv3,pajaro4_lv3,pajaro5_lv3]
+boss_lv3 = [boss]
 
 enemigo_caida = enemigo((50,50),(0,0),"imagenes/juan-salvo/quieto/quieto1.png",diccionario_animaciones_cascarudos,"cascarudo")
 enemigo_caida1 = enemigo((50,50),(200,0),"imagenes/juan-salvo/quieto/quieto1.png",diccionario_animaciones_cascarudos,"cascarudo")

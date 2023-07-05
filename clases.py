@@ -33,6 +33,13 @@ class personaje:
         self.vidas = 3
         #Armamento
         self.balas = 0
+        #Sonido de golpes
+        self.golpe = pygame.mixer.Sound("audios/golpe.wav")
+        self.golpe.set_volume(0.1)
+        #Golpes
+        self.tiempo_retraso = 1000
+        self.ultimo_daño = pygame.time.get_ticks()
+        
        
      
     def rescalar_animaciones(self):
@@ -54,7 +61,7 @@ class personaje:
             
       
             
-    def update(self,pantalla,lista_de_plataformas,piso_caida,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,lista_de_mejoras):
+    def update(self,pantalla,lista_de_plataformas,piso_caida,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,lista_de_mejoras,boss):
         match self.que_hace:
             case "derecha":
                 if not self.esta_saltado:
@@ -77,7 +84,7 @@ class personaje:
                     self.esta_saltado = True
                     self.desplazamiento_y = self.potencia_salto
         self.aplicar_gravedad(pantalla,lista_de_plataformas,piso_caida)
-        self.detectar_nieve(lista_de_enemigos,lista_de_copos,lista_enemgios_caida)
+        self.detectar_nieve(lista_de_enemigos,lista_de_copos,lista_enemgios_caida,boss)
         self.detectar_colision(lista_de_plataformas,lista_de_mejoras)
         self.vida_personaje(pantalla)
         
@@ -113,12 +120,14 @@ class personaje:
                 self.esta_saltado = True
                 self.desplazamiento_y += self.gravedad
          
-    def detectar_nieve(self,lista_de_enemigos,lista_de_copos,lista_enemgios_caida):
+    def detectar_nieve(self,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,boss):
         
-        
+        tiempo_actual = pygame.time.get_ticks()
         for copo in lista_de_copos:
-            if self.lados["top"].colliderect(copo["rectangulo"]):
-            
+            if self.lados["main"].colliderect(copo["rectangulo"]):
+                if tiempo_actual - self.ultimo_daño >= self.tiempo_retraso:
+                    self.vidas -= 1
+                    self.ultimo_daño = tiempo_actual    
                 break
                 
             if copo["rectangulo"].y > 1200:
@@ -129,14 +138,29 @@ class personaje:
             if self.lados["bottom"].colliderect(acaro.lados["top"]):
                 self.puntos += 3
                 acaro.pendulum = "asd"
-                acaro.muerto = "si"
+                lista_de_enemigos.remove(acaro)
+                self.golpe.play()
                 
-                for lado in acaro.lados:
-                    acaro.lados[lado].y = 3000
             if self.lados["right"].colliderect(acaro.lados["left"]) or self.lados["left"].colliderect(acaro.lados["right"]):
                 if self.propulsion:
                     self.propulsion =False 
-                self.vidas -= 1
+                if tiempo_actual - self.ultimo_daño >= self.tiempo_retraso:
+                    self.vidas -= 1
+                    self.ultimo_daño = tiempo_actual    
+                break
+        for bosito in boss :
+            if self.lados["bottom"].colliderect(bosito.lados["top"]):
+                self.puntos += 3
+                bosito.pendulum = "asd"
+                boss.remove(bosito)
+                self.golpe.play()
+                
+            if self.lados["right"].colliderect(bosito.lados["left"]) or self.lados["left"].colliderect(bosito.lados["right"]):
+                if self.propulsion:
+                    self.propulsion =False 
+                if tiempo_actual - self.ultimo_daño >= self.tiempo_retraso:
+                    self.vidas -= 1
+                    self.ultimo_daño = tiempo_actual    
                 break
                     
         for acaro in lista_enemgios_caida :
@@ -144,8 +168,8 @@ class personaje:
                 self.puntos += 3
                 acaro.pendulum = "asd"
                 acaro.muerto = "si"
-                for lado in acaro.lados:
-                    acaro.lados[lado].y = 3000
+                self.golpe.play()
+                lista_enemgios_caida.remove(acaro)
         
                 
                 

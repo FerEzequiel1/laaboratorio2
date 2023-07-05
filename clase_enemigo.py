@@ -25,8 +25,6 @@ class enemigo:
         self.potencia_salto = -15
         self.limite_velocidad_caida = 10
         self.esta_saltado = False
-        #Estado
-        self.muerto = "no"
         #Especie
         self.especie = especie
         

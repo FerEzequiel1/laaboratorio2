@@ -12,7 +12,7 @@ AZUL = (0,0,255)
 VERDE = (0,255,0)
 
 ### actualizar_pantalla ### 
-def actualizar_pantalla(pantalla,personaje,fondo,lista_de_plataformas,piso_caida,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,lista_de_mejoras):
+def actualizar_pantalla(pantalla,personaje,fondo,lista_de_plataformas,piso_caida,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,lista_de_mejoras,boss):
     pantalla.blit(fondo,(0,0))
    
     
@@ -31,7 +31,7 @@ def actualizar_pantalla(pantalla,personaje,fondo,lista_de_plataformas,piso_caida
         else:
             enemigo.aplicar_gravedad(lista_de_plataformas)
 
-    personaje.update(pantalla,lista_de_plataformas,piso_caida,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,lista_de_mejoras)
+    personaje.update(pantalla,lista_de_plataformas,piso_caida,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,lista_de_mejoras,boss)
     
    
 
@@ -148,11 +148,7 @@ def print_copos(lista_de_copos,pantalla):
  
 ## Enemigos ####
        
-def borrar_enemigos(lista_de_enemigos):
-        for enemigo in lista_de_enemigos:
-            if enemigo.muerto == "si":
-                for lado in enemigo.lados:
-                    enemigo.lados[lado].y = 3000
+
         
 cascarudo_caminando_izquierda= [
     pygame.image.load("imagenes/enemigos/cascarudo/cascarudo1.png"),
@@ -178,6 +174,19 @@ pajaro_volando_izquierda = girar_imagenes(pajaro_volando_derecha,True,False)
 diccionario_animaciones_pajaro = {}
 diccionario_animaciones_pajaro["derecha"] = pajaro_volando_derecha
 diccionario_animaciones_pajaro["izquierda"] = pajaro_volando_izquierda
+
+
+burgo_caminando_izquierda = [
+    pygame.image.load("imagenes/enemigos/burgo/burgo-camina-1.png"),
+    pygame.image.load("imagenes/enemigos/burgo/burgo-camina-2.png"),
+    pygame.image.load("imagenes/enemigos/burgo/burgo-camina-3.png"),
+    pygame.image.load("imagenes/enemigos/burgo/burgo-camina-4.png")   
+]
+burgo_caminando_derecha = girar_imagenes(burgo_caminando_izquierda,True,False)
+
+diccionario_animaciones_burgo = {}
+diccionario_animaciones_burgo["derecha"] = burgo_caminando_derecha
+diccionario_animaciones_burgo["izquierda"] = burgo_caminando_izquierda
 
 
 

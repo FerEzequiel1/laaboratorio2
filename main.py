@@ -27,10 +27,21 @@ FPS = 50
 
 pygame.init()
 
+#SONIDO NIVEL 
+pygame.mixer.music.load("audios/juego.wav")
+pygame.mixer.music.play(-1)
+pygame.mixer.music.set_volume(0.1)
+
+#SONIDO GOLPE
+# pygame.mixer.music.load("audios/juego.wav")
+# pygame.mixer.music.play(-1)
+# pygame.mixer.music.set_volume(0.1)
+
 #Personaje
 posicion_inicial = (100,800)
 tamaño = (50,100)
 juan = personaje(tamaño,diccionario_animaciones,posicion_inicial,5)
+
 
 # Evento de nieve y creación
 caida_nieve = pygame.USEREVENT + 0
@@ -53,7 +64,7 @@ while True:
             sys.exit(0)
         elif evento.type == caida_nieve:
             update_copos(lista_de_nieve)
-            borrar_enemigos(lista_de_enemigos_l1)
+            
            
     keys = pygame.key.get_pressed()
     if keys[pygame.K_d]:
@@ -77,7 +88,10 @@ while True:
                 juan.lados[lado].y = 950
                 segundos_totales = 180
         bandera_lv2 = True
-        actualizar_pantalla(PANTALLA,juan,fondo_l2,lista_de_plataformas_l2,piso_caida_lv2,lista_de_enemigos_l2,lista_de_nieve,lista_enemgios_caida_l2,lista_de_mejoras_l2)
+        actualizar_pantalla(PANTALLA,juan,fondo_l2,lista_de_plataformas_l2,piso_caida_lv2,lista_de_enemigos_l2,lista_de_nieve,lista_enemgios_caida_l2,lista_de_mejoras_l2,boss_lv2)
+        for sapo in lista_de_enemigos_l2:
+            pygame.draw.rect(PANTALLA,"blue",sapo.lados["main"],3)
+
     elif juan.puntos >= 414:
         for lado in juan.lados:
             if not bandera_lv3:
@@ -85,16 +99,16 @@ while True:
                 juan.lados[lado].y = 950
                 segundos_totales = 180
         bandera_lv3 = True
-        actualizar_pantalla(PANTALLA,juan,fondo_l3,lista_de_plataformas_l3,piso_caida_lv3,lista_de_enemigos_l3,lista_de_nieve,lista_enemgios_caida_l3,lista_de_mejoras_l3)
+        actualizar_pantalla(PANTALLA,juan,fondo_l3,lista_de_plataformas_l3,piso_caida_lv3,lista_de_enemigos_l3,lista_de_nieve,lista_enemgios_caida_l3,lista_de_mejoras_l3,boss_lv3)
     else:
-        actualizar_pantalla(PANTALLA,juan,fondo_l1,lista_de_plataformas_l1,piso_caida_lv1,lista_de_enemigos_l1,lista_de_nieve,lista_enemgios_caida_l1,lista_de_mejoras_l1)
+        actualizar_pantalla(PANTALLA,juan,fondo_l1,lista_de_plataformas_l1,piso_caida_lv1,lista_de_enemigos_l1,lista_de_nieve,lista_enemgios_caida_l1,lista_de_mejoras_l1,boss_lv1)
 
     print_copos(lista_de_nieve,PANTALLA)
     texto = fuente.render(f"Puntos:{juan.puntos}",False,"red",None)
     vidas = fuente.render(f"Vidas:",False,BLANCO,None)
     
     PANTALLA.blit(texto,(0,0))
-    PANTALLA.blit(vidas,(150,0))
+    PANTALLA.blit(vidas,(200,0))
             
     milliseconds = RELOJ.tick(FPS)  # Obtener la cantidad de milisegundos transcurridos desde la última actualización
     seconds_elapsed = milliseconds / 1000  # Convertir los milisegundos a segundos
@@ -102,11 +116,17 @@ while True:
     
     if bandera_lv3:
         if segundos_totales <= 170:
-            
             for bicho in lista_enemgios_caida_l3:
                 PANTALLA.blit(bicho.imagen,bicho.rectangulo)
                 bicho.pendulo_x(lista_de_plataformas_l3,PANTALLA)
                 bicho.aplicar_gravedad(lista_de_plataformas_l3)
+                
+        if juan.puntos >= 516:
+            for bicho in boss_lv3:
+                PANTALLA.blit(bicho.imagen,bicho.rectangulo)
+                bicho.pendulo_x(lista_de_plataformas_l3,PANTALLA)
+                bicho.aplicar_gravedad(lista_de_plataformas_l3)
+           
     
     # Calcular los minutos y segundos actuales
     minutos = segundos_totales // 60
@@ -116,7 +136,6 @@ while True:
     time_text = "{:02d}:{:02d}".format(int(minutos), int(segundos))
     text_surface = font.render(time_text, True, (255, 255, 255))
     text_rect = text_surface.get_rect(center = (width/2, 50))
-    print(juan.lados["main"].x)
     PANTALLA.blit(text_surface, text_rect)
     pygame.display.update()
     
