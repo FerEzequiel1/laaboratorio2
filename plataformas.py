@@ -20,18 +20,18 @@ piso_caida_lv1 =[]
 
 ############## ENEMIGOS LV1 ######################
 
-cascarudo = enemigo((50,50),(550,650),"imagenes/enemigos/cascarudo/cascarudo1.png",diccionario_animaciones_cascarudos,"cascarudo")
-cascarudo2 = enemigo((50,50),(400,900),"imagenes/enemigos/cascarudo/cascarudo1.png",diccionario_animaciones_cascarudos,"cascarudo")
-cascarudo3 = enemigo((50,50),(500,900),"imagenes/enemigos/cascarudo/cascarudo1.png",diccionario_animaciones_cascarudos,"cascarudo")
-cascarudo4 = enemigo((50,50),(450,650),"imagenes/enemigos/cascarudo/cascarudo1.png",diccionario_animaciones_cascarudos,"cascarudo")
-cascarudo5 = enemigo((50,50),(700,750),"imagenes/enemigos/cascarudo/cascarudo1.png",diccionario_animaciones_cascarudos,"cascarudo")
-cascarudo6 = enemigo((50,50),(800,900),"imagenes/enemigos/cascarudo/cascarudo1.png",diccionario_animaciones_cascarudos,"cascarudo")
-cascarudo7 = enemigo((50,50),(400,550),"imagenes/enemigos/cascarudo/cascarudo1.png",diccionario_animaciones_cascarudos,"cascarudo")
-cascarudo8 = enemigo((50,50),(600,750),"imagenes/enemigos/cascarudo/cascarudo1.png",diccionario_animaciones_cascarudos,"cascarudo")
-cascarudo9 = enemigo((50,50),(800,900),"imagenes/enemigos/cascarudo/cascarudo1.png",diccionario_animaciones_cascarudos,"cascarudo")
-cascarudo10 = enemigo((50,50),(750,550),"imagenes/enemigos/cascarudo/cascarudo1.png",diccionario_animaciones_cascarudos,"cascarudo")
-cascarudo11 = enemigo((50,50),(900,550),"imagenes/enemigos/cascarudo/cascarudo1.png",diccionario_animaciones_cascarudos,"cascarudo")
-cascarudo12 = enemigo((50,50),(800,550),"imagenes/enemigos/cascarudo/cascarudo1.png",diccionario_animaciones_cascarudos,"cascarudo")
+cascarudo = enemigo((50,50),(550,650),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+cascarudo2 = enemigo((50,50),(400,900),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+cascarudo3 = enemigo((50,50),(500,900),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+cascarudo4 = enemigo((50,50),(450,650),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+cascarudo5 = enemigo((50,50),(700,750),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+cascarudo6 = enemigo((50,50),(800,900),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+cascarudo7 = enemigo((50,50),(400,550),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+cascarudo8 = enemigo((50,50),(600,750),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+cascarudo9 = enemigo((50,50),(800,900),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+cascarudo10 = enemigo((50,50),(750,550),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+cascarudo11 = enemigo((50,50),(900,550),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+cascarudo12 = enemigo((50,50),(800,550),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
 
 
 lista_de_enemigos_l1 =[cascarudo,cascarudo2,cascarudo3,cascarudo4,cascarudo5,cascarudo6,cascarudo7,cascarudo8,cascarudo9,cascarudo10,cascarudo11,cascarudo12]
@@ -147,20 +147,20 @@ boss= enemigo((100,100),(200,0),"imagenes/enemigos/prueba.png",diccionario_anima
 lista_de_enemigos_l3 = [cascarudo1_lv3,cascarudo2_lv3,cascarudo3_lv3,pajaro1_lv3,pajaro2_lv3,pajaro3_lv3,pajaro4_lv3,pajaro5_lv3]
 boss_lv3 = [boss]
 
-enemigo_caida = enemigo((50,50),(0,0),"imagenes/juan-salvo/quieto/quieto1.png",diccionario_animaciones_cascarudos,"cascarudo")
-enemigo_caida1 = enemigo((50,50),(200,0),"imagenes/juan-salvo/quieto/quieto1.png",diccionario_animaciones_cascarudos,"cascarudo")
-enemigo_caida2 = enemigo((50,50),(800,0),"imagenes/juan-salvo/quieto/quieto1.png",diccionario_animaciones_cascarudos,"cascarudo")
-enemigo_caida3 = enemigo((50,50),(1000,0),"imagenes/juan-salvo/quieto/quieto1.png",diccionario_animaciones_cascarudos,"cascarudo")
-enemigo_caida4 = enemigo((50,50),(1600,0),"imagenes/juan-salvo/quieto/quieto1.png",diccionario_animaciones_cascarudos,"cascarudo")
-enemigo_caida5 = enemigo((50,50),(1450,0),"imagenes/juan-salvo/quieto/quieto1.png",diccionario_animaciones_cascarudos,"cascarudo")
+enemigo_caida = enemigo((50,50),(0,0),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+enemigo_caida1 = enemigo((50,50),(200,0),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+enemigo_caida2 = enemigo((50,50),(800,0),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+enemigo_caida3 = enemigo((50,50),(1000,0),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+enemigo_caida4 = enemigo((50,50),(1600,0),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
+enemigo_caida5 = enemigo((50,50),(1450,0),"imagenes/enemigos/prueba.png",diccionario_animaciones_cascarudos,"cascarudo")
 
 lista_enemgios_caida_l3 = [enemigo_caida,enemigo_caida1,enemigo_caida2,enemigo_caida3,enemigo_caida4,enemigo_caida5]
 ##### MEJORAS NIVEL 3 ######
 vida1_l3 = drops((50,50),(1300,400),"imagenes/drops/vida.png","vida")
 moneda1_l3 = drops((50,50),(700,400),"imagenes/drops/premio.png","moneda")
-bala1 = drops((50,50),(0,300),"imagenes/drops/bala.png","vida")
-bala2 = drops((50,50),(900,300),"imagenes/drops/bala.png","vida")
-bala3 = drops((50,50),(1700,500),"imagenes/drops/bala.png","vida")
+bala1 = drops((50,50),(0,300),"imagenes/drops/vida.png","vida")
+bala2 = drops((50,50),(900,300),"imagenes/drops/vida.png","vida")
+bala3 = drops((50,50),(1700,500),"imagenes/drops/vida.png","vida")
 
 
 
