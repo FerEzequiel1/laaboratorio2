@@ -181,16 +181,16 @@ class personaje:
                                 break
         if self.lados["left"].x  <= 0:
             self.mover(self.velocidad)
-        elif self.lados["right"].x >= 1800:
+        elif self.lados["right"].x >= 1750:
             self.mover(self.velocidad*-1)
            
         if self.propulsion:
-            self.velocidad = 10
+            self.velocidad = 8
         else:
             self.velocidad = 5 
                         
     def vida_personaje(self,pantalla):
-        separacion = 250
+        separacion = 300
         imagen_vida = pygame.image.load("imagenes/drops/vida.png")
         rectangulo = imagen_vida.get_rect()
         for cuadrado in range(self.vidas):

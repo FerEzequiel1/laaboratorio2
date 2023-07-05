@@ -1,20 +1,24 @@
 import pygame,sys
 from clases import *
-from modo import*
 from clase_drops import*
 from plataformas import*
 
 bandera_lv2 = False
+bandera_lv3 = False
 
 # Datos de la imagen
 
 Tamaño_pantalla = (width,height)
 PANTALLA = pygame.display.set_mode(Tamaño_pantalla)
-
+# FONDOS DE NIVELES
 fondo_l1 = pygame.image.load("imagenes/fondos/buenos-aires.jpg")
 fondo_l1 = pygame.transform.scale(fondo_l1,Tamaño_pantalla)
+
 fondo_l2 = pygame.image.load("imagenes/fondos/river-plate.jpg")
 fondo_l2 = pygame.transform.scale(fondo_l2,Tamaño_pantalla)
+
+fondo_l3 = pygame.image.load("imagenes/fondos/plaza-congreso.jpg")
+fondo_l3 = pygame.transform.scale(fondo_l3,Tamaño_pantalla)
 
 # Datos de tiempo
 RELOJ = pygame.time.Clock()
@@ -47,8 +51,6 @@ while True:
         if evento.type == pygame.QUIT: 
             pygame.quit()
             sys.exit(0)
-        elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_TAB:
-            cambiar_modo()
         elif evento.type == caida_nieve:
             update_copos(lista_de_nieve)
             borrar_enemigos(lista_de_enemigos_l1)
@@ -68,13 +70,22 @@ while True:
     
     
     
-    if juan.puntos >= 216:
+    if juan.puntos >= 216 and juan.puntos <413:
         for lado in juan.lados:
             if not bandera_lv2:
                 juan.lados[lado].x = 100
+                juan.lados[lado].y = 950
+                segundos_totales = 180
         bandera_lv2 = True
-            
         actualizar_pantalla(PANTALLA,juan,fondo_l2,lista_de_plataformas_l2,piso_caida_lv2,lista_de_enemigos_l2,lista_de_nieve,lista_enemgios_caida_l2,lista_de_mejoras_l2)
+    elif juan.puntos >= 414:
+        for lado in juan.lados:
+            if not bandera_lv3:
+                juan.lados[lado].x = 100
+                juan.lados[lado].y = 950
+                segundos_totales = 180
+        bandera_lv3 = True
+        actualizar_pantalla(PANTALLA,juan,fondo_l3,lista_de_plataformas_l3,piso_caida_lv3,lista_de_enemigos_l3,lista_de_nieve,lista_enemgios_caida_l3,lista_de_mejoras_l3)
     else:
         actualizar_pantalla(PANTALLA,juan,fondo_l1,lista_de_plataformas_l1,piso_caida_lv1,lista_de_enemigos_l1,lista_de_nieve,lista_enemgios_caida_l1,lista_de_mejoras_l1)
 
@@ -84,38 +95,18 @@ while True:
     
     PANTALLA.blit(texto,(0,0))
     PANTALLA.blit(vidas,(150,0))
-
-    if get_modo():
-        for lados in piso.lados:
-            pygame.draw.rect(PANTALLA,"blue",piso.lados[lados],3)
-           
-        for lado in juan.lados:
-            pygame.draw.rect(PANTALLA,"orange",juan.lados[lado],3)
-        pygame.draw.rect(PANTALLA,"blue",juan.lados["main"],3)
-            
-        for plataformas in lista_de_plataformas_l1:
-            pygame.draw.rect(PANTALLA,"orange",plataformas.lados["top"],3)
-            pygame.draw.rect(PANTALLA,"blue",plataformas.lados["main"],3)
-            
-        for copo in lista_de_nieve:
-            pygame.draw.rect(PANTALLA,"blue",copo["rectangulo"],3)
-            
-        for bicho in cascarudo.lados:
-            pygame.draw.rect(PANTALLA,"orange",cascarudo.lados["main"],3)
-            
-        for papa in cascarudo2.lados:
-            pygame.draw.rect(PANTALLA,"orange",cascarudo2.lados["main"],3)
             
     milliseconds = RELOJ.tick(FPS)  # Obtener la cantidad de milisegundos transcurridos desde la última actualización
     seconds_elapsed = milliseconds / 1000  # Convertir los milisegundos a segundos
     segundos_totales -= seconds_elapsed
     
-    # if segundos_totales <= 170:
-        
-    #     for bicho in lista_enemgios_caida:
-    #         PANTALLA.blit(bicho.imagen,bicho.rectangulo)
-    #         bicho.pendulo_x(lista_de_plataformas,PANTALLA)
-    #         bicho.aplicar_gravedad(lista_de_plataformas)
+    if bandera_lv3:
+        if segundos_totales <= 170:
+            
+            for bicho in lista_enemgios_caida_l3:
+                PANTALLA.blit(bicho.imagen,bicho.rectangulo)
+                bicho.pendulo_x(lista_de_plataformas_l3,PANTALLA)
+                bicho.aplicar_gravedad(lista_de_plataformas_l3)
     
     # Calcular los minutos y segundos actuales
     minutos = segundos_totales // 60
@@ -125,8 +116,7 @@ while True:
     time_text = "{:02d}:{:02d}".format(int(minutos), int(segundos))
     text_surface = font.render(time_text, True, (255, 255, 255))
     text_rect = text_surface.get_rect(center = (width/2, 50))
-    
+    print(juan.lados["main"].x)
     PANTALLA.blit(text_surface, text_rect)
     pygame.display.update()
     
-D
