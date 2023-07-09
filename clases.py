@@ -196,8 +196,7 @@ class personaje:
                     case "vida":
                         if self.vidas<3:
                             self.vidas +=1
-                            drop.rectangulo.y = 3000
-                            break
+                            lista_de_mejoras.remove(drop)
                         else:
                             if self.vidas >=3 and self.puntos >=50:
                                 self.vidas +=1

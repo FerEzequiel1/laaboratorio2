@@ -144,8 +144,10 @@ def update_copos(lista_de_copos):
 def print_copos(lista_de_copos,pantalla):
     for copo in lista_de_copos:
         pantalla.blit(copo["superficie"],copo["rectangulo"])
-        
- 
+pygame.init()    
+lista_de_nieve = crear_bolas_nieve(20)
+caida_nieve = pygame.USEREVENT + 0
+pygame.time.set_timer(caida_nieve,30)
 ## Enemigos ####
        
 

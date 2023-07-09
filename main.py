@@ -1,7 +1,7 @@
 import pygame,sys
 from clases import *
 from clase_drops import*
-from plataformas import*
+from plataformas_enemigos import*
 
 bandera_lv2 = False
 bandera_lv3 = False
@@ -89,9 +89,6 @@ while True:
                 segundos_totales = 180
         bandera_lv2 = True
         actualizar_pantalla(PANTALLA,juan,fondo_l2,lista_de_plataformas_l2,piso_caida_lv2,lista_de_enemigos_l2,lista_de_nieve,lista_enemgios_caida_l2,lista_de_mejoras_l2,boss_lv2)
-        for sapo in lista_de_enemigos_l2:
-            pygame.draw.rect(PANTALLA,"blue",sapo.lados["main"],3)
-
     elif juan.puntos >= 414:
         for lado in juan.lados:
             if not bandera_lv3:
@@ -137,5 +134,6 @@ while True:
     text_surface = font.render(time_text, True, (255, 255, 255))
     text_rect = text_surface.get_rect(center = (width/2, 50))
     PANTALLA.blit(text_surface, text_rect)
+    print(juan.vidas)
     pygame.display.update()
     
