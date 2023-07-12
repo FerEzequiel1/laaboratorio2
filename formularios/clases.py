@@ -1,5 +1,5 @@
 from configuraciones import *
-import pygame
+import pygame,sys
 
 
 class personaje:
@@ -33,13 +33,17 @@ class personaje:
         self.vidas = 3
         #Armamento
         self.balas = 0
-        #Sonido de golpes
+        self.municiones =[]
+        #Sonido elimiar enemigo
         self.golpe = pygame.mixer.Sound("audios/golpe.wav")
         self.golpe.set_volume(0.1)
+        #Sonido daño 
+        self.daño = pygame.mixer.Sound("audios/daño.wav")
+        self.daño.set_volume(0.1)
         #Golpes
         self.tiempo_retraso = 1000
         self.ultimo_daño = pygame.time.get_ticks()
-        
+      
        
      
     def rescalar_animaciones(self):
@@ -58,9 +62,7 @@ class personaje:
     def mover(self,velocidad):
         for lado in self.lados:
             self.lados[lado].x += velocidad
-            
-      
-            
+             
     def update(self,pantalla,lista_de_plataformas,piso_caida,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,lista_de_mejoras,boss):
         match self.que_hace:
             case "derecha":
@@ -83,12 +85,13 @@ class personaje:
                 if not self.esta_saltado:
                     self.esta_saltado = True
                     self.desplazamiento_y = self.potencia_salto
+                    
         self.aplicar_gravedad(pantalla,lista_de_plataformas,piso_caida)
-        self.detectar_nieve(lista_de_enemigos,lista_de_copos,lista_enemgios_caida,boss)
+        self.detectar_nieve(lista_de_enemigos,lista_de_copos,lista_enemgios_caida,boss,self.municiones,lista_de_plataformas)
         self.detectar_colision(lista_de_plataformas,lista_de_mejoras)
         self.vida_personaje(pantalla)
+        self.tiempo(pantalla)
         
-                
     def aplicar_gravedad(self,pantalla,lista_de_plataformas,piso_caida):
         if self.esta_saltado:
             if self.derecha: 
@@ -120,7 +123,7 @@ class personaje:
                 self.esta_saltado = True
                 self.desplazamiento_y += self.gravedad
          
-    def detectar_nieve(self,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,boss):
+    def detectar_nieve(self,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,boss,misil,lista_plataformas):
         
         tiempo_actual = pygame.time.get_ticks()
         for copo in lista_de_copos:
@@ -129,10 +132,11 @@ class personaje:
                     self.vidas -= 1
                     self.ultimo_daño = tiempo_actual    
                 break
-                
-            if copo["rectangulo"].y > 1200:
-                copo["rectangulo"].x = random.randrange(0,1800,60)
-                copo["rectangulo"].y = random.randrange(-2000,0,60) 
+              
+            for plataforma in lista_plataformas:  
+                if copo["rectangulo"].y > 1200 or copo["rectangulo"].colliderect(plataforma.rectangulo):
+                    copo["rectangulo"].x = random.randrange(0,1800,60)
+                    copo["rectangulo"].y = random.randrange(-2000,0,60) 
         
         for acaro in lista_de_enemigos :
             if self.lados["bottom"].colliderect(acaro.lados["top"]):
@@ -146,22 +150,31 @@ class personaje:
                     self.propulsion =False 
                 if tiempo_actual - self.ultimo_daño >= self.tiempo_retraso:
                     self.vidas -= 1
-                    self.ultimo_daño = tiempo_actual    
+                    self.ultimo_daño = tiempo_actual 
+                self.daño.play()   
                 break
         for bosito in boss :
             if self.lados["bottom"].colliderect(bosito.lados["top"]):
                 self.puntos += 3
-                bosito.pendulum = "asd"
-                boss.remove(bosito)
+                if bosito.vidas >= 1:
+                    if tiempo_actual - self.ultimo_daño >= self.tiempo_retraso:
+                        self.ultimo_daño = tiempo_actual    
+                        bosito.vidas -= 1
+                    if bosito.vidas == 0:
+                        bosito.pendulum = "asd"
+                        boss.remove(bosito)
                 self.golpe.play()
+        
                 
             if self.lados["right"].colliderect(bosito.lados["left"]) or self.lados["left"].colliderect(bosito.lados["right"]):
                 if self.propulsion:
                     self.propulsion =False 
                 if tiempo_actual - self.ultimo_daño >= self.tiempo_retraso:
                     self.vidas -= 1
-                    self.ultimo_daño = tiempo_actual    
+                    self.ultimo_daño = tiempo_actual 
+                self.daño.play()    
                 break
+            
                     
         for acaro in lista_enemgios_caida :
             if self.lados["bottom"].colliderect(acaro.lados["top"]):
@@ -170,7 +183,32 @@ class personaje:
                 acaro.muerto = "si"
                 self.golpe.play()
                 lista_enemgios_caida.remove(acaro)
+            if self.lados["right"].colliderect(acaro.lados["left"]) or self.lados["left"].colliderect(acaro.lados["right"]):
+                if self.propulsion:
+                    self.propulsion =False 
+                if tiempo_actual - self.ultimo_daño >= self.tiempo_retraso:
+                    self.vidas -= 1
+                    self.ultimo_daño = tiempo_actual 
+                self.daño.play()    
+                break
+        for acaro in lista_de_enemigos :
+            for p in misil:
+                if p.rectangulo.colliderect(acaro.lados["main"]):
+                    self.puntos += 3
+                    acaro.pendulum = "asd"
+                    lista_de_enemigos.remove(acaro)
+                    self.golpe.play()
+                    misil.remove(p)
+        for acaro in lista_enemgios_caida :
+            for p in misil:
+                if p.rectangulo.colliderect(acaro.lados["main"]):
+                    self.puntos += 3
+                    acaro.pendulum = "asd"
+                    lista_enemgios_caida.remove(acaro)
+                    self.golpe.play()
+                    misil.remove(p)
         
+                
                 
                 
                 
@@ -187,10 +225,11 @@ class personaje:
             if self.rectangulo.colliderect(drop.rectangulo):
                 match tipo:
                     case "moneda":
-                        drop.rectangulo.y = 3000
+                        lista_de_mejoras.remove(drop)
                         self.puntos += 60
                     case "propulsion":
                         self.propulsion = True
+                        lista_de_mejoras.remove(drop)
                     case "balas":
                         self.balas += 5
                     case "vida":
@@ -218,9 +257,56 @@ class personaje:
         rectangulo = imagen_vida.get_rect()
         for cuadrado in range(self.vidas):
             pantalla.blit(imagen_vida,(separacion,0))
-            separacion += 50             
+            separacion += 50  
+            
+        fuente = pygame.font.SysFont("Arial",30)    
+        texto = fuente.render(f"Puntos:{self.puntos}",False,"red",None)
+        vidas = fuente.render(f"Vidas:",False,BLANCO,None)
+        pantalla.blit(texto,(0,0))
+        pantalla.blit(vidas,(200,0))    
+        
+        
+        if self.vidas == 0 or self.lados["main"].y >= 1000:    
+            perder_juego(PANTALLA,"PERDISTE",100,width//2,height//4) 
+            perder_juego(PANTALLA,"Para continuar precione la tecla K,se reiniciara sus puntos y el nivel manteniendo los enemigos muertos.",40,width//2,height//2) 
+            perder_juego(PANTALLA,"Presione la tecla K para continuar",35,width//2,height *7.5/9)
+            pygame.display.flip()
+            pygame.mixer.music.pause()
+            espera = True
+            tamaño = (50,100)
+            posicion_inicial = (100,800)
+            RELOJ = pygame.time.Clock()
+            while espera:
+                RELOJ.tick(50)
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        nombre_jugador = obtener_ultimo_nombre()
+                        guardar_puntos(self.puntos,nombre_jugador)
+                     
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_k]:
+                    espera = False
+                    self.__init__(tamaño,diccionario_animaciones,posicion_inicial,5)
+                    pygame.mixer.music.play(-1)  
                         
-                        
+    def tiempo(self,pantalla): 
+        segundos_totales = 3 * 60
+        
+        tiempo_actual = pygame.time.get_ticks()
+                  
+        font = pygame.font.SysFont(None, 48)
+                
+        seconds_elapsed = tiempo_actual / 1000  # Convertir los milisegundos a segundos
+        segundos_totales -= seconds_elapsed
+        minutos = segundos_totales // 60
+        segundos = segundos_totales % 60
+
+        # Renderizar el texto del cronómetro
+        time_text = "{:02d}:{:02d}".format(int(minutos), int(segundos))
+        text_surface = font.render(time_text, True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center = (width/2, 50))
+        pantalla.blit(text_surface, text_rect)          
                         
                         
                     

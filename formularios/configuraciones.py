@@ -1,7 +1,7 @@
 import pygame,random,sys
 from clase_nieve import nieve
-import sqlite3
 import json
+import sqlite3
 width = 1800
 height = 1000
 Tamaño_pantalla = (width,height)
@@ -35,29 +35,6 @@ def actualizar_pantalla(pantalla,personaje,fondo,lista_de_plataformas,piso_caida
             enemigo.aplicar_gravedad(lista_de_plataformas)
 
     personaje.update(pantalla,lista_de_plataformas,piso_caida,lista_de_enemigos,lista_de_copos,lista_enemgios_caida,lista_de_mejoras,boss)
-    
-   
-
-# minutos_iniciales = 3
-# segundos_totales = minutos_iniciales * 60 
-
-# def actualizar_cronometro(segundos_totales,pantalla):
-#     fuente_cronometro = pygame.font.SysFont("Arial",30)
-    
-#     if segundos_totales > 0:
-#         segundos_totales -= 1
-
-#     # Calcular los minutos y segundos actuales
-#     minutos = segundos_totales // 60
-#     segundos = segundos_totales % 60
-
-#     # Renderizar el texto del reloj
-#     time_text = "{:02d}:{:02d}".format(minutos, segundos)
-#     text_surface = fuente_cronometro.render(time_text, True, (255, 255, 255))
-#     text_rect = text_surface.get_rect(center = (200, 150))
-    
-#     pantalla.blit(text_surface, text_rect)
-
 
 ## Reescalado de imagenes,posicion y diccionarios #####
 
@@ -81,8 +58,10 @@ personaje_quieto_derecha = [
 
 ]
 personaje_saltando_derecha = [
-    pygame.image.load("Imagenes/juan-salvo/saltando/quieto1.png"),
-    
+    pygame.image.load("Imagenes/juan-salvo/saltando/quieto1.png"), 
+]
+misil_izquierda = [
+    pygame.image.load("Imagenes/drops/misil.png"), 
 ]
 
 personaje_caminando = [
@@ -98,6 +77,7 @@ personaje_caminando = [
 personaje_caminando_izquierda = girar_imagenes(personaje_caminando,True,False)
 personaje_quieto_izquierda = girar_imagenes(personaje_quieto_derecha,True,False)
 personaje_saltando_izquierda = girar_imagenes(personaje_saltando_derecha,True,False)
+misil_derecha = girar_imagenes(misil_izquierda,True,False)
 
 diccionario_animaciones = {}
 diccionario_animaciones["quieto_derecha"] = personaje_quieto_derecha
@@ -126,13 +106,13 @@ def obtener_rectangulos(principal)->dict:
 
 
 ##### copos de nieve #####   
-def crear_bolas_nieve(cantidad,path):
+def crear_bolas_nieve(cantidad):
     lista = []
     
     for i in range(cantidad):
         x = random.randrange(0,1800,60)
         y = random.randrange(-2000,0,60)
-        diccionario = nieve((30,30),(x,y),path)
+        diccionario = nieve((30,30),(x,y),"imagenes/nieve/nieve.png")
         diccionario_copos = diccionario.lista_de_nieve()
         lista.append(diccionario_copos)
     
@@ -143,24 +123,14 @@ def update_copos(lista_de_copos):
         
         rectangulo = copo["rectangulo"]
         rectangulo.y += copo["velocidad"]
-       
+
 def print_copos(lista_de_copos,pantalla):
     for copo in lista_de_copos:
         pantalla.blit(copo["superficie"],copo["rectangulo"])
-        
 pygame.init()    
-lista_de_nieve = crear_bolas_nieve(20,"imagenes/nieve/nieve.png")
+lista_de_nieve = crear_bolas_nieve(20)
 caida_nieve = pygame.USEREVENT + 0
 pygame.time.set_timer(caida_nieve,30)
-
-def update_disparo(lista_balas,pantalla):
-    prr = lista_balas[0]
-    for bala in lista_balas:    
-            # pantalla.blit(bala["superficie"],bala["rectangulo"]) 
-            rectangulo = bala["rectangulo"]
-            rectangulo.x += 5
-    # pantalla.blit(prr.imagen,(prr.rectangulo.x,prr.rectangulo.y)) 
-    # prr.rectangulo.x += 50
 ## Enemigos ####
        
 
@@ -203,12 +173,36 @@ diccionario_animaciones_burgo = {}
 diccionario_animaciones_burgo["derecha"] = burgo_caminando_derecha
 diccionario_animaciones_burgo["izquierda"] = burgo_caminando_izquierda
 
+def agregar_nombre_jugador(nombre):
+    with open('formularios/nombre_jugador.json', 'r') as json_file:
+        data = json.load(json_file)
+        
+    nuevo_diccionario = {"nombre": nombre}
 
+    data.append(nuevo_diccionario)
 
-############# PLATAFORMAS lv1 #######################
+    with open('formularios/nombre_jugador.json', 'w') as json_file:
+        json.dump(data, json_file)
+        
+def obtener_mejores_jugadores():
+    conexion = sqlite3.connect('datos_puntos.db')
+    cursor = conexion.cursor()
+    cursor.execute("SELECT nombre,puntos FROM Puntos ORDER BY puntos DESC LIMIT 3")
+    resultados = cursor.fetchall()
+    conexion.close()
+
+    lista_mejores_jugadores =[]
+    for registro in resultados:
+        diccionario = {
+            "nombre":registro[0],
+            "puntos":registro[1]
+        }
+        lista_mejores_jugadores.append(diccionario)
+
+    return(lista_mejores_jugadores)
+
 def perder_juego(pantalla,texto,size,x,y):
         font = pygame.font.SysFont("serif", size)
-        # text_surface = font.render(f"{texto}, True, (255, 255, 255)")
         text_surface = font.render(f"{texto}",True,(0,255,0))
 
         text_rect = text_surface.get_rect()
@@ -235,3 +229,5 @@ def obtener_ultimo_nombre():
     ultimo_diccionario = data[-1]
     
     return(ultimo_diccionario["nombre"])
+############# PLATAFORMAS lv1 #######################
+

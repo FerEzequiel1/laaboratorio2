@@ -19,7 +19,4 @@ class nieve:
         diccionario_nieve["velocidad"] = random.randrange(3,8,1)
         
         return diccionario_nieve
-    
-    def update_laser(self):
-        self.rectangulo.x += 5
         

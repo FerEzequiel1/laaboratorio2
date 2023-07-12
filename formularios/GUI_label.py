@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 from GUI_widget import *
+from manejador_niveles import*
 
 class Label(Widget):
     def __init__(self, screen,x,y,w,h,text, font, font_size, font_color, path_image):

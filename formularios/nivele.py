@@ -1,7 +1,8 @@
 import pygame
 from configuraciones import*
 from plataformas_enemigos import *
-from formularios.clase_laser import*
+
+
 
 class Nivel():
     def __init__(self,pantalla,fondo,personaje,lista_plataformas,piso_caida,lista_de_copos,lista_enemigos,lista_enemigos_caida,lista_mejoras,boss) -> None:
@@ -21,9 +22,6 @@ class Nivel():
         #Mejoras
         self.mejoras = lista_mejoras
         self.game_over = False
-        #Balas
-        self.balas= []
-        
         
     def update(self,lista_eventos):
         
@@ -33,7 +31,6 @@ class Nivel():
                 sys.exit(0)
             elif evento.type == caida_nieve:
                 update_copos(lista_de_nieve)
-            
             
         self.leer_inputs()
         self.actualizar_pantalla()
@@ -54,17 +51,7 @@ class Nivel():
                 pass
             else:
                 enemigo.aplicar_gravedad(self.plataformas)
-                
-        # if self.jugador.dispara == True:
-        #     if len(self.balas) >= 1: 
-        #         municion = self.balas[0]
-        #         self._slave.blit(municion.imagen,municion.rectangulo)
-        #         if self.jugador.derecha:
-        #             municion.update(1)
-        #         else:
-        #             municion.update(-1)
-        # else:
-        #     pass
+
         self.jugador.update(self._slave,self.plataformas,self.plataforma_caida,self.enemigos,self.copos,self.enemigos_caida,self.mejoras,self.boss)
         
     
@@ -76,16 +63,7 @@ class Nivel():
         elif keys[pygame.K_a]:
             self.jugador.que_hace = "izquierda"
         elif keys[pygame.K_SPACE]:
-            self.jugador.que_hace = "saltar"
-        elif keys[pygame.K_f]:
-            self.jugador.dispara = True
-            lista_balas =[]
-            for bala in range(self.jugador.balas):
-                municion = Laser()
-                municion.rectangulo.x = self.jugador.lados["main"].x+50
-                municion.rectangulo.y = self.jugador.lados["left"].y+50
-                lista_balas.append(municion)
-            self.balas=lista_balas
+            self.jugador.que_hace = "saltar"    
         else:
             if self.jugador.derecha:
                 self.jugador.que_hace = "quieto_derecha"
